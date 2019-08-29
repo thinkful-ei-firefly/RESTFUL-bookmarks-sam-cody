@@ -54,7 +54,10 @@ bookmarkRouter.route('/')
   logger.info('made new book')
 
   BookmarksService.addBookmarks(req.app.get('db'), newBook)
-    .then(response => res.status(201).json(response))
+    .then(response => {
+      bookmarks.push(response[0])
+      res.status(201).json(response)
+    })
     .then(logger.info('made new book'))
     .then(bookmarks.push(newBook))
     .catch(next);
@@ -78,7 +81,7 @@ bookmarkRouter.route('/:id')
     .catch(next);
 })
 .delete((req, res, next) => {
-  id = req.params.id;
+  const id = req.params.id;
 
   let idValid = false;
   let i=0;
@@ -102,6 +105,17 @@ bookmarkRouter.route('/:id')
     .status(400)
     .send('No book with that ID, cannnot delete it')
   }
+})
+.patch(bodyParser, (req, res, next) => {
+  const id = req.params.id;
+  newInfo = {
+  }
+  const reqKeys = Object.keys(req.body)
+  reqKeys.forEach(key => newInfo[key] = req.body[key])
+
+  BookmarksService.updateBookmark(req.app.get('db'), id, newInfo )
+    .then(response => res.json(response))
+    .catch(next)
 })
 
 module.exports = bookmarkRouter;

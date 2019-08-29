@@ -198,3 +198,27 @@
 {"message":"returning bookmarks","level":"info"}
 {"message":"deleted item with id 20","level":"info"}
 {"message":"returning bookmarks","level":"info"}
+{"message":"returning bookmarks","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"no book with provided id","level":"error"}
+{"message":"returning bookmark","level":"info"}
+{"message":"returning bookmarks","level":"info"}
+{"message":"deleted item with id 21","level":"info"}
+{"message":"returning bookmark","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"deleted item with id 26","level":"info"}
+{"message":"returning bookmarks","level":"info"}
+{"message":"returning bookmark","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"made new book","level":"info"}
+{"message":"returning bookmark","level":"info"}
