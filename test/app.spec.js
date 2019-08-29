@@ -14,7 +14,7 @@ describe('BookmarksService', () => {
     app.set('db', db) // sets test knex link
   })
 
-  const cleanBmTable = () => db('bookmarks_table').truncate()
+  const cleanBmTable = () => db('bookmarks').truncate()
   before('clean Bm table', cleanBmTable)
   afterEach('clean Bm table', cleanBmTable)
   after('disconnect from db', () => db.destroy()) // disconnect from db after all tests run
@@ -49,12 +49,60 @@ describe('BookmarksService', () => {
 
   describe('GET /bookmarks', () => {
     context('given no bookmarks in db', () => {
-      it('responds 200, with "no bookmarks exists response"', () => {
+      it('responds 200, with "no bookmarks exist response"', () => {
         return supertest(app)
           .get('/bookmarks')
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .expect(200)
       })
+    })
+    context('given bookmarks in db', () => {
+      const testBms = makeBookmarksArray()
+
+      beforeEach('insert bookmarks', () => {
+        return db.insert(testBms).into('bookmarks')
+      })
+
+      it('responds 200 with matching test data', () => {
+        return supertest(app)
+          .get('/bookmarks')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200, testBms)
+      })
+    })
+  })
+
+  describe('GET /bookmarks/:id', () => {
+    context('given no bookmarks in db', () => {
+      it('responds 404', () => {
+        return supertest(app)
+          .get('/bookmarks/9000')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(404)
+      })
+    })
+    context('given bookmark with id 2 in db', () => {
+      const testBms = makeBookmarksArray()
+
+      beforeEach('insert bookmarks', () => {
+        return db.insert(testBms).into('bookmarks')
+      })
+      it('responds 200 with matching test data', () => {
+        return supertest(app)
+          .get('/bookmarks/2')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(200, testBms[1])
+      })
+    })
+  })
+
+  describe('POST /bookmarks', () => {
+    it('responds 400 with malformed data', () => {
+      return supertest(app)
+        .post('/bookmarks')
+        .send({})
+        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+        .expect(400)
     })
   })
 })

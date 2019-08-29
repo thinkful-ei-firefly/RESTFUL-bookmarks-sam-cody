@@ -74,7 +74,7 @@ bookmarkRouter.route('/:id')
         res.json(bookmarkData[0])
       } else {
         res
-          .status(400)
+          .status(404)
           .send('There is no bookmark with that id')
       }
     })

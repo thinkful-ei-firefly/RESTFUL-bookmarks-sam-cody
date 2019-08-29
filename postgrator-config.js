@@ -1,4 +1,7 @@
 module.exports = {
   driver: 'pg',
-  connectionString: 'postgresql://dunder-mifflin@localhost/bookmarks'
+  connectionString:
+    process.env.NODE_ENV === 'test'
+      ? 'postgresql://dunder-mifflin@localhost/bookmarks_test'
+      : 'postgresql://dunder-mifflin@localhost/bookmarks'
 }
