@@ -108,14 +108,34 @@ bookmarkRouter.route('/:id')
 })
 .patch(bodyParser, (req, res, next) => {
   const id = req.params.id;
-  newInfo = {
-  }
-  const reqKeys = Object.keys(req.body)
-  reqKeys.forEach(key => newInfo[key] = req.body[key])
 
-  BookmarksService.updateBookmark(req.app.get('db'), id, newInfo )
-    .then(response => res.json(response))
-    .catch(next)
+  let idValid = false;
+  let i=0;
+
+  while(!idValid && i<bookmarks.length) {
+    if (bookmarks[i].id === Number(id)) {
+      idValid = true;
+    }
+    i++
+  }
+
+  if (idValid) {
+    newInfo = {
+    }
+    const reqKeys = Object.keys(req.body)
+
+    if (!reqKeys.includes('title') && !reqKeys.includes('url') && !reqKeys.includes('description') &&  !reqKeys.includes('rating')) {
+      return res.status(400).send('must provide data')
+    }
+
+    reqKeys.forEach(key => newInfo[key] = req.body[key])
+  
+    BookmarksService.updateBookmark(req.app.get('db'), id, newInfo )
+      .then(response => res.status(204).end())
+      .catch(next)
+  } else {
+    return res.status(404).send('that bookmark does not exist')
+  }
 })
 
 module.exports = bookmarkRouter;

@@ -148,6 +148,41 @@ describe('BookmarksService', () => {
           .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
           .expect(204)
       })
+      it('returns 400 when id does not exist', () => {
+        return supertest(app)
+          .delete('/bookmarks/9000')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(400)
+      })
+    })
+  })
+  describe('PATCH /bookmarks/:id', () => {
+    context('db has data', () => {
+      beforeEach('insert bookmarks', () => {
+        return db.insert(makeBookmarksArray()).into('bookmarks')
+      })
+      it('returns a 204', () => {
+        return supertest(app)
+          .patch('/bookmarks/1')
+          .send({title: 'x'})
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(204)
+      })
+      it('returns a 404 when item to update does not exist', () => {
+        return supertest(app)
+          .patch('/bookmarks/9000')
+          .send({title: 'x'})
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(404)
+      })
+      it('responds with 400 when no data is supplied', () => {
+        return supertest(app)
+          .patch('/bookmarks/1')
+          .send({})
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(400)
+      })
+
     })
   })
 })
