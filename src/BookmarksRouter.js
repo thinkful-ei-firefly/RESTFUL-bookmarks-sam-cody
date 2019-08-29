@@ -97,7 +97,7 @@ bookmarkRouter.route('/:id')
     bookmarks.splice(i-1, 1)
     logger.info('deleted item with id '+id)
     BookmarksService.deleteBookmark(req.app.get('db'), id)
-          .then(response => res.json(response))
+          .then(response => res.status(204).end())
           .catch(next)
   } else {
   logger.error('no book with provided id')

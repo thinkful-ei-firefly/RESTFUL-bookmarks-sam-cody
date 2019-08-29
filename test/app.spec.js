@@ -104,5 +104,50 @@ describe('BookmarksService', () => {
         .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
         .expect(400)
     })
+    it('responds with 400 when rating is wrong format', () => {
+      return supertest(app)
+        .post('/bookmarks')
+        .send({
+          title: 'a',
+          url: 'b',
+          description: 'c',
+          rating: 6
+        })
+        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+        .expect(400)
+    })
+    it('responds with 201 and posted item', () => {
+      const postedBookmark = {
+        title: 'a',
+        url: 'b',
+        description: 'c',
+        rating: 5
+      }
+      return supertest(app)
+        .post('/bookmarks')
+        .send(postedBookmark)
+        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+        .then(response => {
+          expect(201)
+          expect(response.title === postedBookmark.title)
+          expect(response.url === postedBookmark.url)
+          expect(response.description === postedBookmark.description)
+          expect(response.rating == postedBookmark.rating)
+        })
+    })
+  })
+
+  describe('DELETE /bookmarks/:id', () => {
+    context('db has data', () => {
+      beforeEach('insert bookmarks', () => {
+        return db.insert(makeBookmarksArray()).into('bookmarks')
+      })
+      it('returns a 204', () => {
+        return supertest(app)
+          .delete('/bookmarks/1')
+          .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+          .expect(204)
+      })
+    })
   })
 })
